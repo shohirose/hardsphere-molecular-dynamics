@@ -1,16 +1,18 @@
 cmake_minimum_required(VERSION 3.8)
 project(hardsphere-molecular-dynamics CXX)
 
+cmake_policy(SET CMP0076 NEW)
 add_subdirectory(external)
 
-add_library(hardsphere INTERFACE)
-target_compile_features(hardsphere INTERFACE cxx_std_14)
-target_compile_options(hardsphere INTERFACE
+add_library(hardsphere)
+target_compile_features(hardsphere PUBLIC cxx_std_17)
+target_compile_options(hardsphere PUBLIC
     -Wall
     -Wextra
     -Wpedantic
 )
-target_include_directories(hardsphere INTERFACE include)
+target_include_directories(hardsphere PUBLIC include)
+add_subdirectory(src)
 
 enable_testing()
 add_subdirectory(test)
