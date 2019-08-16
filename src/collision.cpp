@@ -12,10 +12,19 @@ std::optional<double> collision_time(const vector2d& x1, const vector2d& v1,
   const auto vsqr = dv.squared_norm();
   const auto asqr = (a1 + a2) * (a1 + a2);
   const auto k = b * b - vsqr * (rsqr - asqr);
-  if (k < 0)
+
+  if (k < 0) {
     return std::nullopt;
-  else
-    return -(b + std::sqrt(k)) / vsqr;
+  } else {
+    const auto t = -(b + std::sqrt(k)) / vsqr;
+    // If two particles move in parallel, vsqr becomes zero, and t becomes NaN.
+    // If t is negative, two particles have already collided, and will not
+    // collide.
+    if (std::isnan(t) || t < 0)
+      return std::nullopt;
+    else
+      return t;
+  }
 }
 
 }  // namespace hardsphere
