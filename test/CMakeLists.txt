@@ -9,3 +9,4 @@ function(add_unit_test name)
 endfunction()
 
 add_unit_test(vector2d)
+add_unit_test(collision)
