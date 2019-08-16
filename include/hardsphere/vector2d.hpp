@@ -2,6 +2,7 @@
 #define HARDSPHERE_VECTOR2D_HPP
 
 #include <cmath>
+#include <iostream>
 
 namespace hardsphere {
 
@@ -71,6 +72,14 @@ inline vector2d operator*(double a, const vector2d& v) {
 
 inline vector2d operator/(const vector2d& v, double a) {
   return {v.x() / a, v.y() / a};
+}
+
+inline std::istream& operator>>(std::istream& is, vector2d& v) {
+  return is >> v.x() >> v.y();
+}
+
+inline std::ostream& operator<<(std::ostream& os, const vector2d& v) {
+  return os << v.x() << ' ' << v.y();
 }
 
 }  // namespace hardsphere
