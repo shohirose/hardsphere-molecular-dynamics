@@ -9,11 +9,15 @@ struct particle {
   vector2d position;
   vector2d velocity;
   double radius;
+  double mass;
 
   particle() = default;
   particle(const vector2d& t_position, const vector2d& t_velocity,
-           double t_radius)
-      : position{t_position}, velocity{t_velocity}, radius{t_radius} {}
+           double t_radius, double t_mass)
+      : position{t_position},
+        velocity{t_velocity},
+        radius{t_radius},
+        mass{t_mass} {}
   particle(const particle&) = default;
   particle(particle&&) = default;
 
@@ -22,11 +26,12 @@ struct particle {
 };
 
 inline std::istream& operator>>(std::istream& is, particle& p) {
-  return is >> p.position >> p.velocity >> p.radius;
+  return is >> p.position >> p.velocity >> p.radius >> p.mass;
 }
 
 inline std::ostream& operator<<(std::ostream& os, const particle& p) {
-  return os << p.position << ' ' << p.velocity << ' ' << p.radius;
+  return os << p.position << ' ' << p.velocity << ' ' << p.radius << ' '
+            << p.mass;
 }
 
 }  // namespace hardsphere
