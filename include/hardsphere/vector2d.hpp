@@ -28,13 +28,23 @@ struct vector2d {
   vector2d(vector2d&&) = default;
   /// @}
 
-  vector2d& operator=(const vector2d&) = default;
-  vector2d& operator=(vector2d&&) = default;
-
   const auto& x() const noexcept { return x_; }
   const auto& y() const noexcept { return y_; }
   auto& x() noexcept { return x_; }
   auto& y() noexcept { return y_; }
+
+  vector2d& operator=(const vector2d&) = default;
+  vector2d& operator=(vector2d&&) = default;
+  vector2d& operator+=(const vector2d& other) {
+    x_ += other.x();
+    y_ += other.y();
+    return *this;
+  }
+  vector2d& operator-=(const vector2d& other) {
+    x_ -= other.x();
+    y_ -= other.y();
+    return *this;
+  }
 
   /// @brief Returns squared norm
   auto squared_norm() const noexcept { return x_ * x_ + y_ * y_; }
@@ -45,6 +55,20 @@ struct vector2d {
   /// @brief Returns dot product
   auto dot(const vector2d& other) const noexcept {
     return x_ * other.x() + y_ * other.y();
+  }
+
+  /// @brief Normalize this vector
+  void normalize() noexcept {
+    const auto inv_mag = 1.0 / this->norm();
+    x_ *= inv_mag;
+    y_ *= inv_mag;
+  }
+
+  /// @brief Returns normalized vector
+  auto normalized() const noexcept {
+    vector2d v(*this);
+    v.normalize();
+    return v;
   }
 
  private:
