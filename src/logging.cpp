@@ -22,56 +22,28 @@ std::string getFormattedLocalTime(const char* fmt) {
 std::string getLogLevelName(LogLevel level) {
   switch (level) {
     case LogLevel::off:
-      return "off";
+      return "OFF";
     case LogLevel::fatal:
-      return "fatal";
+      return "FATAL";
     case LogLevel::error:
-      return "error";
+      return "ERROR";
     case LogLevel::warn:
-      return "warn";
+      return "WARN";
     case LogLevel::info:
-      return "info";
+      return "INFO";
     case LogLevel::debug:
-      return "debug";
+      return "DEBUG";
     case LogLevel::trace:
-      return "trace";
+      return "TRACE";
     default:
-      assert(false);
-      return "";
+      return "NONE";
   }
 }
 
 std::string getLogPrefix(LogLevel level, const char* tag) {
   std::stringstream ss;
-  switch (level) {
-    case LogLevel::off:
-      ss << "[OFF] ";
-      break;
-    case LogLevel::error:
-      ss << "[ERROR] ";
-      break;
-    case LogLevel::fatal:
-      ss << "[FATAL] ";
-      break;
-    case LogLevel::warn:
-      ss << "[WARN] ";
-      break;
-    case LogLevel::info:
-      ss << "[INFO] ";
-      break;
-    case LogLevel::debug:
-      ss << "[DEBUG] ";
-      break;
-    case LogLevel::trace:
-      ss << "[TRACE] ";
-      break;
-    default:
-      ss << "[UNKNOWN] ";
-      break;
-  }
-
-  ss << getFormattedLocalTime("%Y-%m-%d, %H:%M:%S") << ' ' << tag << ' ';
-
+  ss << '[' << getLogLevelName(level) << "] ["
+     << getFormattedLocalTime("%Y-%m-%d %H:%M:%S") << "] [" << tag << ']';
   return ss.str();
 }
 
