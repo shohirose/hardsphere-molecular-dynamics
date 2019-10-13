@@ -3,68 +3,98 @@
 
 namespace hs = hardsphere;
 
-TEST_CASE("vector calculus unit tests", "[vector2d]") {
-  using hs::vector2d;
+TEST_CASE("vector calculus unit tests", "[Vector2d]") {
+  using hs::Vector2d;
   SECTION("constructs from two floating point values") {
-    vector2d v(1.0, 2.0);
-    REQUIRE(v.x() == Approx(1.0));
-    REQUIRE(v.y() == Approx(2.0));
+    Vector2d v{1.0, 2.0};
+    CHECK(v.x() == Approx(1.0));
+    CHECK(v.y() == Approx(2.0));
   }
 
   SECTION("constructs from zero vector") {
-    const auto v = vector2d::zero();
-    REQUIRE(v.x() == Approx(0.0));
-    REQUIRE(v.y() == Approx(0.0));
+    const auto v = Vector2d::zero();
+    CHECK(v.x() == Approx(0.0));
+    CHECK(v.y() == Approx(0.0));
   }
 
   SECTION("constructs from one vector") {
-    const auto v = vector2d::one();
-    REQUIRE(v.x() == Approx(1.0));
-    REQUIRE(v.y() == Approx(1.0));
+    const auto v = Vector2d::one();
+    CHECK(v.x() == Approx(1.0));
+    CHECK(v.y() == Approx(1.0));
   }
 
   SECTION("constructs from constant vector") {
-    const auto v = vector2d::constant(3.0);
-    REQUIRE(v.x() == Approx(3.0));
-    REQUIRE(v.y() == Approx(3.0));
+    const auto v = Vector2d::constant(3.0);
+    CHECK(v.x() == Approx(3.0));
+    CHECK(v.y() == Approx(3.0));
   }
 
   SECTION("vector norms") {
-    vector2d v(1.0, 2.0);
-    REQUIRE(v.norm() == Approx(std::sqrt(5.0)));
-    REQUIRE(v.squared_norm() == Approx(5.0));
+    Vector2d v{1.0, 2.0};
+    CHECK(v.norm() == Approx(std::sqrt(5.0)));
+    CHECK(v.squaredNorm() == Approx(5.0));
+  }
+
+  SECTION("vector normalization") {
+    Vector2d v1{1.0, 2.0};
+    const auto v2 = v1.normalized();
+    v1.normalize();
+    CHECK(v1.x() == Approx(1.0 / std::sqrt(5.0)));
+    CHECK(v1.y() == Approx(2.0 / std::sqrt(5.0)));
+    CHECK(v2.x() == Approx(1.0 / std::sqrt(5.0)));
+    CHECK(v2.y() == Approx(2.0 / std::sqrt(5.0)));
   }
 
   SECTION("vector calculus") {
-    vector2d v1(1.0, 2.0);
-    vector2d v2(2.0, 5.0);
+    Vector2d v1{1.0, 2.0};
+    Vector2d v2{2.0, 5.0};
+
+    SECTION("dot product") {
+      const auto d = v1.dot(v2);
+      CHECK(d == Approx(12.0));
+    }
 
     SECTION("addition") {
-      const auto v3 = v1 + v2;
-      REQUIRE(v3.x() == Approx(3.0));
-      REQUIRE(v3.y() == Approx(7.0));
+      auto v3 = v1 + v2;
+      CHECK(v3.x() == Approx(3.0));
+      CHECK(v3.y() == Approx(7.0));
+      v3 += v1;
+      CHECK(v3.x() == Approx(4.0));
+      CHECK(v3.y() == Approx(9.0));
     }
 
     SECTION("subtraction") {
-      const auto v3 = v1 - v2;
-      REQUIRE(v3.x() == Approx(-1.0));
-      REQUIRE(v3.y() == Approx(-3.0));
+      auto v3 = v1 - v2;
+      CHECK(v3.x() == Approx(-1.0));
+      CHECK(v3.y() == Approx(-3.0));
+      v3 -= v1;
+      CHECK(v3.x() == Approx(-2.0));
+      CHECK(v3.y() == Approx(-5.0));
     }
 
     SECTION("multiplication") {
-      const auto v3 = v1 * 2.0;
-      REQUIRE(v3.x() == Approx(2.0));
-      REQUIRE(v3.y() == Approx(4.0));
+      auto v3 = v1 * 2.0;
+      CHECK(v3.x() == Approx(2.0));
+      CHECK(v3.y() == Approx(4.0));
+      v3 *= 2.0;
+      CHECK(v3.x() == Approx(4.0));
+      CHECK(v3.y() == Approx(8.0));
 
-      const auto v4 = 2.0 * v1;
-      REQUIRE(v4.x() == Approx(2.0));
-      REQUIRE(v4.y() == Approx(4.0));
+      auto v4 = 2.0 * v1;
+      CHECK(v4.x() == Approx(2.0));
+      CHECK(v4.y() == Approx(4.0));
+      v4 *= 2.0;
+      CHECK(v3.x() == Approx(4.0));
+      CHECK(v3.y() == Approx(8.0));
     }
 
     SECTION("division") {
-      const auto v3 = v1 / 2.0;
-      REQUIRE(v3.x() == Approx(0.5));
-      REQUIRE(v3.y() == Approx(1.0));
+      auto v3 = v1 / 2.0;
+      CHECK(v3.x() == Approx(0.5));
+      CHECK(v3.y() == Approx(1.0));
+      v3 /= 2.0;
+      CHECK(v3.x() == Approx(0.25));
+      CHECK(v3.y() == Approx(0.5));
     }
   }
 }

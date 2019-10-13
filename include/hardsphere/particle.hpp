@@ -5,34 +5,17 @@
 
 namespace hardsphere {
 
-struct particle {
-  vector2d position;
-  vector2d velocity;
+struct Particle {
+  Vector2d position;
+  Vector2d velocity;
   double radius;
   double mass;
-
-  particle() = default;
-  particle(const vector2d& t_position, const vector2d& t_velocity,
-           double t_radius, double t_mass)
-      : position{t_position},
-        velocity{t_velocity},
-        radius{t_radius},
-        mass{t_mass} {}
-  particle(const particle&) = default;
-  particle(particle&&) = default;
-
-  particle& operator=(const particle&) = default;
-  particle& operator=(particle&&) = default;
+  double time;
 };
 
-inline std::istream& operator>>(std::istream& is, particle& p) {
-  return is >> p.position >> p.velocity >> p.radius >> p.mass;
-}
+std::istream& operator>>(std::istream& is, Particle& p);
 
-inline std::ostream& operator<<(std::ostream& os, const particle& p) {
-  return os << p.position << ' ' << p.velocity << ' ' << p.radius << ' '
-            << p.mass;
-}
+std::ostream& operator<<(std::ostream& os, const Particle& p);
 
 }  // namespace hardsphere
 
