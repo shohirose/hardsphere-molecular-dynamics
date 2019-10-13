@@ -10,3 +10,4 @@ endfunction()
 
 add_unit_test(vector2d)
 add_unit_test(collision)
+add_unit_test(logging)
