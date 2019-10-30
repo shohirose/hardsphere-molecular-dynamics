@@ -8,8 +8,6 @@
 
 namespace hardsphere {
 
-namespace {
-
 std::string getFormattedLocalTime(const char* fmt) {
   using std::chrono::system_clock;
   auto t = system_clock::now();
@@ -40,6 +38,8 @@ std::string getLogLevelName(LogLevel level) {
   }
 }
 
+namespace {
+
 std::string getLogPrefix(LogLevel level, const char* tag) {
   std::stringstream ss;
   ss << '[' << getLogLevelName(level) << "] ["
@@ -47,33 +47,34 @@ std::string getLogPrefix(LogLevel level, const char* tag) {
   return ss.str();
 }
 
-std::shared_ptr<std::ofstream> makeDefaultLogFile(
-    const std::string& filenamePrefix) {
-  std::string filename =
-      filenamePrefix + '_' + getFormattedLocalTime("%Y%m%d-%H%M%S") + ".log";
-  return std::make_shared<std::ofstream>(filename,
-                                         std::ios::out | std::ios::app);
+std::shared_ptr<Logger>& getHardsphereLogger() {
+  static std::shared_ptr<Logger> logger;
+  return logger;
 }
 
-std::shared_ptr<Logger>& getHardsphereLogger() {
-  static std::shared_ptr<Logger> logger{nullptr};
-  return logger;
+std::shared_ptr<std::ofstream> makeLogFile(const std::string& filenamePrefix) {
+  const std::string filename = filenamePrefix + ".log";
+  return std::make_shared<std::ofstream>(filename,
+                                         std::ios::out | std::ios::app);
 }
 
 }  // anonymous namespace
 
 Logger::Logger(LogLevel level, const std::string& filenamePrefix)
-    : level_{level}, log_file_{makeDefaultLogFile(filenamePrefix)} {}
+    : level_{level}, logFile_{makeLogFile(filenamePrefix)} {}
+
+Logger::Logger(LogLevel level, const std::shared_ptr<std::ofstream>& logFile)
+    : level_{level}, logFile_{logFile} {}
 
 void Logger::log(LogLevel level, const char* tag, const char* msg) {
   std::stringstream ss;
   ss << getLogPrefix(level, tag) << ' ' << msg;
-  (*log_file_) << ss.str() << '\n';
+  (*logFile_) << ss.str() << '\n';
 }
 
 void Logger::log(LogLevel level, const char* tag,
                  const std::ostringstream& msg) {
-  (*log_file_) << getLogPrefix(level, tag) << ' ' << msg.str() << '\n';
+  (*logFile_) << getLogPrefix(level, tag) << ' ' << msg.str() << '\n';
 }
 
 void setLogger(const std::shared_ptr<Logger>& logger) {
